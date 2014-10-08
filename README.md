@@ -27,3 +27,4 @@ Configure me with these flags!
 ## TODO
 
 	* Perhaps srvi should just compile all .go files in the current directory?
+	* Add flag for custom index.html
