@@ -74,5 +74,8 @@ func main() {
 	fmt.Println(banner)
 	fmt.Printf("Open your browser to http://%s:%d!\n", *host, *port)
 
-	http.ListenAndServe(fmt.Sprintf("%s:%d", *host, *port), nil)
+	err := http.ListenAndServe(fmt.Sprintf("%s:%d", *host, *port), nil)
+	if err != nil {
+		panic("ListenAndServe: " + err.Error())
+	}
 }
