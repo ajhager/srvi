@@ -5,7 +5,7 @@ SRVi is a utility for quickly testing out [GopherJS](http://github.com/gopherjs/
 ## Install
 
 ```bash
-go get -u github.com/ajhager/engi/srvi
+go get -u github.com/ajhager/srvi
 ```
 
 ## Usage
