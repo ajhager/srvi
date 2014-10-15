@@ -22,5 +22,4 @@ List all go files as arguments!
   -host="127.0.0.1": The host at which to serve
   -index="": The html file to use as an index
   -port=8080: The port at which to serve
-  -static="data": The relative path to your assets
 ```

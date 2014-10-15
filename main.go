@@ -24,6 +24,11 @@ var index *string
 var code = ""
 
 func buildHandler(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path != "/" && r.URL.Path != "/index.html" {
+		http.ServeFile(w, r, r.URL.Path[1:])
+		return
+	}
+
 	var out bytes.Buffer
 	builder := gopherjslib.NewBuilder(&out, nil)
 
@@ -66,10 +71,6 @@ func buildHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func staticHandler(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, r.URL.Path[1:])
-}
-
 func jsHandler(w http.ResponseWriter, r *http.Request) {
 	headers := w.Header()
 	headers["Content-Type"] = []string{"application/javascript"}
@@ -78,7 +79,6 @@ func jsHandler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	index = flag.String("index", "", "The html file to use as an index")
-	static := flag.String("static", "data", "The relative path to your assets")
 	host := flag.String("host", "127.0.0.1", "The host at which to serve")
 	port := flag.Int("port", 8080, "The port at which to serve")
 
@@ -98,7 +98,6 @@ func main() {
 
 	http.HandleFunc("/", buildHandler)
 	http.HandleFunc("/main.go.js", jsHandler)
-	http.HandleFunc(fmt.Sprintf("/%s/", path.Clean(*static)), staticHandler)
 
 	fmt.Println(banner)
 	fmt.Printf("Open your browser to http://%s:%d!\n", *host, *port)
