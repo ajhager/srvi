@@ -20,7 +20,12 @@ func programHandler(w http.ResponseWriter, r *http.Request) {
 	var out bytes.Buffer
 	builder := gopherjslib.NewBuilder(&out, nil)
 
-	for _, name := range flag.Args() {
+	names := []string{"main.go"}
+	if flag.NArg() > 0 {
+		names = flag.Args()
+	}
+
+	for _, name := range names {
 		if path.Ext(name) != ".go" {
 			continue
 		}
