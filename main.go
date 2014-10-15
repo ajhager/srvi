@@ -71,12 +71,6 @@ func buildHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func jsHandler(w http.ResponseWriter, r *http.Request) {
-	headers := w.Header()
-	headers["Content-Type"] = []string{"application/javascript"}
-	fmt.Fprint(w, code)
-}
-
 func main() {
 	index = flag.String("index", "", "The html file to use as an index")
 	host := flag.String("host", "127.0.0.1", "The host at which to serve")
@@ -97,7 +91,10 @@ func main() {
 	flag.Parse()
 
 	http.HandleFunc("/", buildHandler)
-	http.HandleFunc("/main.go.js", jsHandler)
+	http.HandleFunc("/main.go.js", func(w http.ResponseWriter, r *http.Request) {
+		w.Header()["Content-Type"] = []string{"text/javascript"}
+		fmt.Fprint(w, code)
+	})
 
 	fmt.Println(banner)
 	fmt.Printf("Open your browser to http://%s:%d!\n", *host, *port)
