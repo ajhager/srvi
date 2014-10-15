@@ -84,7 +84,7 @@ func main() {
 
 	flag.Usage = func() {
 		fmt.Fprintln(os.Stderr, banner)
-		fmt.Fprintln(os.Stderr, "List all go files as arguments!")
+		fmt.Fprintln(os.Stderr, "List your go files as arguments!")
 		flag.PrintDefaults()
 	}
 
