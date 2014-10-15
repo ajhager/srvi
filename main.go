@@ -9,6 +9,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/go-on/gopherjslib"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"path"
@@ -16,7 +17,9 @@ import (
 
 const failure = `<html><head><title>SRVi</title></head><body style="color:#555555;background:#eeeeee;font-family:Arial;font-size:36px;text-align:center;margin-top:80px;">%s</body></html>`
 
-const success = `<html><head><title>SRVi</title></head><body><script src="./main.go.js" type="text/javascript"></script></body></html>`
+var success = `<html><head><title>SRVi</title></head><body><script src="./main.go.js" type="text/javascript"></script></body></html>`
+
+var index *string
 
 var code = ""
 
@@ -51,7 +54,16 @@ func buildHandler(w http.ResponseWriter, r *http.Request) {
 
 	code = out.String()
 
-	fmt.Fprint(w, success)
+	if *index != "" {
+		data, err := ioutil.ReadFile(*index)
+		if err != nil {
+			fmt.Fprintf(w, failure, err)
+			return
+		}
+		fmt.Fprint(w, string(data))
+	} else {
+		fmt.Fprint(w, success)
+	}
 }
 
 func staticHandler(w http.ResponseWriter, r *http.Request) {
@@ -65,6 +77,7 @@ func jsHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	index = flag.String("index", "", "The html file to use as an index")
 	static := flag.String("static", "data", "The relative path to your assets")
 	host := flag.String("host", "127.0.0.1", "The host at which to serve")
 	port := flag.Int("port", 8080, "The port at which to serve")

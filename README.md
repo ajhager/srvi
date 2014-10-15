@@ -10,6 +10,8 @@ go get -u github.com/ajhager/srvi
 
 ## Usage
 
+If a custom index file is supplied, add `<script src="./main.go.js" type="text/javascript"></script>` to the end of the `<body>` element.
+
 ```
    _______ _   ___
   / __/ _ \ | / (_)
@@ -18,10 +20,7 @@ go get -u github.com/ajhager/srvi
 
 List all go files as arguments!
   -host="127.0.0.1": The host at which to serve
+	-index="": The html file to use as an index
   -port=8080: The port at which to serve
   -static="data": The relative path to your assets
 ```
-
-## TODO
-
-	* Add flag for custom index.html
