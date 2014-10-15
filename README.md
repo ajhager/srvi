@@ -10,7 +10,7 @@ go get -u github.com/ajhager/srvi
 
 ## Usage
 
-If a custom index file is supplied, add `<script src="./main.go.js" type="text/javascript"></script>` to the end of the `<body>` element.
+If a custom index file is supplied, add `<script src="/main.go.js" type="text/javascript"></script>` to the end of the `<body>` element.
 
 ```
    _______ _   ___

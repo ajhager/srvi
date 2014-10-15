@@ -17,7 +17,7 @@ import (
 
 const failure = `<html><head><title>SRVi</title></head><body style="color:#555555;background:#eeeeee;font-family:Arial;font-size:36px;text-align:center;margin-top:80px;">%s</body></html>`
 
-var success = `<html><head><title>SRVi</title></head><body><script src="./main.go.js" type="text/javascript"></script></body></html>`
+var success = `<html><head><title>SRVi</title></head><body><script src="/main.go.js" type="text/javascript"></script></body></html>`
 
 var index *string
 
