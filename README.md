@@ -1,6 +1,6 @@
 # SRVi
 
-SRVi is a utility for quickly testing out [GopherJS](http://github.com/gopherjs/gopherjs) programs in the browser. It supports hosting a server, displaying errors, and rebuilding your project each time you refesh the page.
+SRVi is a utility for quickly testing out [GopherJS](http://github.com/gopherjs/gopherjs) programs in the browser. It will automatically rebuild and serve your project every time you refresh. Quickly try out new ideas without even needing to setup a new index.html every time. 
 
 ## Install
 
