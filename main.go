@@ -14,34 +14,33 @@ import (
 	"net/http"
 	"os"
 	"path"
-	"strings"
 )
 
 func programHandler(w http.ResponseWriter, r *http.Request) {
-	// Determine the program to build.
-	path := r.URL.Path[1:]
-	if strings.HasSuffix(r.URL.Path, "/") {
-		path += "main"
-	}
-
-	// Open the program's source.
-	f, err := os.Open(fmt.Sprintf("%s.go", path))
-	if err != nil {
-		errorTemplate.Execute(w, &Error{err})
-		return
-	}
-
-	// Compile the program's source.
 	var out bytes.Buffer
-	err = gopherjslib.Build(f, &out, nil)
-	if err != nil {
+	builder := gopherjslib.NewBuilder(&out, nil)
+
+	for _, name := range flag.Args() {
+		if path.Ext(name) != ".go" {
+			continue
+		}
+
+		file, err := os.Open(name)
+		if err != nil {
+			errorTemplate.Execute(w, &Error{err})
+			return
+		}
+		defer file.Close()
+
+		builder.Add(name, file)
+	}
+
+	if err := builder.Build(); err != nil {
 		errorTemplate.Execute(w, &Error{err})
 		return
 	}
-	script := out.String()
 
-	// Plug in the compiled javascript.
-	successTemplate.Execute(w, &Success{template.JS(script)})
+	successTemplate.Execute(w, &Success{template.JS(out.String())})
 }
 
 func staticHandler(w http.ResponseWriter, r *http.Request) {
@@ -61,7 +60,7 @@ func main() {
 
 	flag.Usage = func() {
 		fmt.Fprintln(os.Stderr, banner)
-		fmt.Fprintln(os.Stderr, "Configure me with these flags!")
+		fmt.Fprintln(os.Stderr, "List all go files as arguments!")
 		flag.PrintDefaults()
 	}
 

@@ -10,15 +10,13 @@ go get -u github.com/ajhager/srvi
 
 ## Usage
 
-Run `srvi` in the same directory as the file with your entrypoint, with your static files in a directory named 'data'. Access http://localhost:8080/ if your game file is at ./main.go. Any other file name can be accessed at http://localhost:8080/name, where 'name' would be name.go.
-
 ```
    _______ _   ___
   / __/ _ \ | / (_)
  _\ \/ , _/ |/ / /
 /___/_/|_||___/_/  says...
 
-Configure me with these flags!
+List all go files as arguments!
   -host="127.0.0.1": The host at which to serve
   -port=8080: The port at which to serve
   -static="data": The relative path to your assets
@@ -26,5 +24,4 @@ Configure me with these flags!
 
 ## TODO
 
-	* Perhaps srvi should just compile all .go files in the current directory?
 	* Add flag for custom index.html
