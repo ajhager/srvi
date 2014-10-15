@@ -8,13 +8,20 @@ import (
 	"bytes"
 	"flag"
 	"fmt"
-	"github.com/elazarl/go-bindata-assetfs"
 	"github.com/go-on/gopherjslib"
 	"html/template"
 	"net/http"
 	"os"
 	"path"
 )
+
+var failureT *template.Template
+
+const failure = `<html><head><title>SRVi</title></head><body style="color:#555555;background:#eeeeee;font-family:Arial;font-size:36px;text-align:center;margin-top:80px;">{{.}}</body></html>`
+
+var successT *template.Template
+
+const success = `<html><head><title>SRVi</title></head><body><script>{{.}}</script></body></html>`
 
 func programHandler(w http.ResponseWriter, r *http.Request) {
 	var out bytes.Buffer
@@ -32,7 +39,7 @@ func programHandler(w http.ResponseWriter, r *http.Request) {
 
 		file, err := os.Open(name)
 		if err != nil {
-			errorTemplate.Execute(w, &Error{err})
+			failureT.Execute(w, err)
 			return
 		}
 		defer file.Close()
@@ -41,11 +48,11 @@ func programHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := builder.Build(); err != nil {
-		errorTemplate.Execute(w, &Error{err})
+		failureT.Execute(w, err)
 		return
 	}
 
-	successTemplate.Execute(w, &Success{template.JS(out.String())})
+	successT.Execute(w, template.JS(out.String()))
 }
 
 func staticHandler(w http.ResponseWriter, r *http.Request) {
@@ -53,6 +60,9 @@ func staticHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	failureT, _ = template.New("path").Parse(failure)
+	successT, _ = template.New("path").Parse(success)
+
 	static := flag.String("static", "data", "The relative path to your assets")
 	host := flag.String("host", "127.0.0.1", "The host at which to serve")
 	port := flag.Int("port", 8080, "The port at which to serve")
@@ -72,7 +82,6 @@ func main() {
 	flag.Parse()
 
 	http.HandleFunc("/", programHandler)
-	http.Handle("/favicon.png", http.FileServer(&assetfs.AssetFS{Asset, AssetDir, "."}))
 	http.HandleFunc(fmt.Sprintf("/%s/", path.Clean(*static)), staticHandler)
 
 	fmt.Println(banner)
