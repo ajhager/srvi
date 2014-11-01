@@ -73,8 +73,8 @@ func buildHandler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	index = flag.String("index", "", "The html file to use as an index")
-	host := flag.String("host", "127.0.0.1", "The host at which to serve")
-	port := flag.Int("port", 8080, "The port at which to serve")
+	endpoint := flag.String("endpoint", "app.go.js", "The name of the compiled javascript file")
+	host := flag.String("http", "localhost:8080", "The host at which to serve")
 
 	banner := `   _______ _   ___ 
   / __/ _ \ | / (_)
@@ -91,15 +91,15 @@ func main() {
 	flag.Parse()
 
 	http.HandleFunc("/", buildHandler)
-	http.HandleFunc("/app.go.js", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/"+*endpoint, func(w http.ResponseWriter, r *http.Request) {
 		w.Header()["Content-Type"] = []string{"text/javascript"}
 		fmt.Fprint(w, code)
 	})
 
 	fmt.Println(banner)
-	fmt.Printf("Open your browser to http://%s:%d!\n", *host, *port)
+	fmt.Printf("Open your browser to http://%s!\n", *host)
 
-	err := http.ListenAndServe(fmt.Sprintf("%s:%d", *host, *port), nil)
+	err := http.ListenAndServe(fmt.Sprintf("%s", *host), nil)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		return
