@@ -8,7 +8,7 @@ import (
 	"bytes"
 	"flag"
 	"fmt"
-	"github.com/go-on/gopherjslib"
+	"github.com/shurcool/gopherjslib"
 	"io/ioutil"
 	"net/http"
 	"os"
